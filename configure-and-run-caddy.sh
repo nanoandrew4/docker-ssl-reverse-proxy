@@ -7,6 +7,5 @@ if [ ! -f sites.cfg ]; then
 fi
 ./Caddyfile.generate
 
-
 cd /
 caddy run --config /etc/caddy/Caddyfile --adapter caddyfile

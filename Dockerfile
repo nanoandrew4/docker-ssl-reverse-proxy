@@ -35,8 +35,8 @@ ENV XDG_DATA_HOME=/home/caddy/data
 VOLUME /home/caddy/
 
 # Create directory to mount sites.cfg file
-VOLUME /etc/caddy/
-COPY Caddyfile.generate /etc/caddy
+RUN mkdir -p /etc/caddy/ && chown -R 65534:65534 /etc/caddy
+COPY --chown=65534:65534 Caddyfile.generate /etc/caddy
 
 # Uninstall direct build dependencies
 RUN apk del libcap libcap-ng libcap-ng-utils linux-pam shadow
