@@ -37,7 +37,7 @@ that I build upon prior to switching to
      ``docker run --restart=always --user=65534 --name proxy -d -p 80:80 -p 443:443 --network=bridge --cap-add=NET_BIND_SERVICE --cap-drop=ALL -v "`pwd`/sites.cfg:/etc/caddy/sites.cfg" nanoandrew4/ssl-reverse-proxy``
 
   4. Have the reverse proxy and backend containers join network `ssl-reverse-proxy`:<br>
-     `docker network connect ssl-reverse-proxy proxy`
+     `docker network connect ssl-reverse-proxy proxy`<br>
      `docker network connect ssl-reverse-proxy <your-container>`
 
 # How to write the `sites.cfg` file
