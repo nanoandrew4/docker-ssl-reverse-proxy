@@ -29,22 +29,16 @@ that I build upon prior to switching to
   1. Create a simple `sites.cfg` file manually
      as seen in the [example](sites.cfg.EXAMPLE.gentoo-ev).
 
-  2. Run [`./Caddyfile.generate`](Caddyfile.generate)
-     to generate `Caddyfile` from `sites.cfg` for you.
-
-  3. Create Docker network `ssl-reverse-proxy` for the reverse proxy
+  2. Create Docker network `ssl-reverse-proxy` for the reverse proxy
      and its backends to talk:<br>
      `docker network create --internal ssl-reverse-proxy`
 
-  4. Spin up the container:<br>
-     `docker-compose up -d --build`
+  3. Spin up the container, connect to a bridge (or some network that provides internet connectivity), and mount your sites.cfg file to `/etc/caddy/sites.cfg`:<br>
+     ``docker run --restart=always --user=65534 --name proxy -d -p 80:80 -p 443:443 --network=bridge --cap-add=NET_BIND_SERVICE --cap-drop=ALL -v "`pwd`/sites.cfg:/etc/caddy/sites.cfg" nanoandrew4/ssl-reverse-proxy``
 
-  5. Have backend containers join network `ssl-reverse-proxy`,
-     e.g. as done in the proxy's own
-     [`docker-compose.yml` file](docker-compose.yml).
-
-  6. Enjoy.
-
+  4. Have the reverse proxy and backend containers join network `ssl-reverse-proxy`:<br>
+     `docker network connect ssl-reverse-proxy proxy`<br>
+     `docker network connect ssl-reverse-proxy <your-container>`
 
 # How to write the `sites.cfg` file
 
@@ -62,7 +56,7 @@ Section name `example.org` sets the master domain name that all alias domains
 redirect to.  `backend` points to the hostname and port that serves actual
 content.  Here, `example-org` is the name of the Docker container that
 Docker DNS will let us access because we made both containers join external
-network `ssl-reverse-proxy` in their `docker-compose.yml` files.
+network `ssl-reverse-proxy`.
 `aliases` is an optional list of domain names to have both HTTP and HTTPS
 redirect to master domain `example.org`.  That's it.
 

@@ -2,5 +2,7 @@
 *
 
 # Unignore selected files
+!configure-and-run-caddy.sh
+!Caddyfile.generate
 !docker-entrypoint.sh
 !format-caddy-json-access-log.sh
